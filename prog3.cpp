@@ -8,12 +8,15 @@ int transform = -1;
 #define translate 1
 #define rotate 2
 #define rotate_pvt 3
+#define scale 4
+#define scale_fp 5
 
 float tx=50, ty=50;
 float theta = 30, pvx = -100, pvy = -100;
+float sx = 0.5, sy = 0.5;
+float fx =-100, fy=-100;
 
 void draw_tri(){
-	cout << "Display function called with transform: " << transform << endl;
 	glBegin(GL_LINE_LOOP);
 	for(int i=0; i<n; i++){
 		glVertex2f(tri[0][i], tri[1][i]);
@@ -49,6 +52,22 @@ void display(){
 			draw_tri();
 			glPopMatrix();
 			break;
+		case scale:
+			glColor3f(0,1,0);
+			glPushMatrix();
+			glScalef(sx,sy,1);
+			draw_tri();
+			glPopMatrix();
+			break;
+		case scale_fp:
+			glColor3f(0,1,0);
+			glPushMatrix();
+			glTranslatef(fx,fy,0);
+			glScalef(sx,sy,1);
+			glTranslatef(-fx,-fy,0);
+			draw_tri();
+			glPopMatrix();
+			break;
 	}
 	glFlush();
 }
@@ -77,7 +96,17 @@ void rotMenu(int id){
 	glutPostRedisplay();
 }
 
-
+void scaleMenu(int id){
+	switch(id){
+	case 4:
+		transform=scale;
+		break;
+	case 5:
+		transform=scale_fp;
+		break;
+	}
+	glutPostRedisplay();
+}
 
 
 void init(){
@@ -100,12 +129,18 @@ int main(int argc, char** argv){
 	glutAddMenuEntry("Rotate about origin",2);
 	glutAddMenuEntry("Rotata about pivot point",3);
 
+	int scale_menu = glutCreateMenu(scaleMenu);
+	glutAddMenuEntry("Scale about origin",4);
+	glutAddMenuEntry("Scale about fixed point",5);
+
 	glutDisplayFunc(display);
 
 	glutCreateMenu(menu);
 	glutAddMenuEntry("Exit",0);
 	glutAddMenuEntry("Translate",1);
 	glutAddSubMenu("Rotate",rot_menu);
+	glutAddSubMenu("Scale",scale_menu);
+
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 	
 	glutMainLoop();
