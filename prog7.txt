@@ -1,0 +1,22 @@
+import cv2 as cv
+import matplotlib.pyplot as plt
+from IPython.display import Image
+
+img = cv.imread("CGLab/puppy.png")
+img_rgb = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+plt.imshow(img_rgb)
+
+h,w,channels = img_rgb.shape
+Cx = h//2
+Cy =w//2
+print(Cx,Cy)
+
+tl = img_rgb[:Cx, :Cy]
+tr = img_rgb[:Cx, Cy:]
+bl = img_rgb[Cx:, :Cy]
+br = img_rgb[Cx:, Cy:]
+
+plt.subplot(221); plt.imshow(tl);
+plt.subplot(222); plt.imshow(tr);
+plt.subplot(223); plt.imshow(bl);
+plt.subplot(224); plt.imshow(br);
