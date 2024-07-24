@@ -1,0 +1,13 @@
+import cv2 as cv
+import matplotlib.pyplot as plt
+plt.rc('figure', figsize=(10,10))
+
+img = cv.imread("Images/face2.jpg")
+img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+faces_cascade = cv.CascadeClassifier(cv.data.haarcascades+'haarcascade_frontalface_default.xml')
+faces = faces_cascade.detectMultiScale(img_gray, 1.7,2)
+# print(faces)
+for x,y,w,h in faces:
+    cv.rectangle(img,(x,y), (x+w, y+h),(255,0,0),6)
+img_rgb = img[:,:,::-1]
+plt.imshow(img_rgb)
